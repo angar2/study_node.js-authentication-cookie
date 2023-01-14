@@ -1,0 +1,26 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "main": "main.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "pm2 start main.js --watch --no-daemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://angar2@github.com/angar2/study_node.js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/angar2/study_node.js/issues"
+  },
+  "homepage": "https://github.com/angar2/study_node.js#readme",
+  "description": "",
+  "dependencies": {
+    "sanitize-html": "^2.7.3"
+  }
+}
