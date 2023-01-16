@@ -5,7 +5,11 @@ http.createServer((req, res) => {
         'Set-cookie': [
             'yummy_cookie=choco', 
             'tasty_cookie=strawbarry',
-            `permanent=cookie; Max-age=${60*60*24*365}`]
+            `permanent=cookie; Max-age=${60*60*24*365}`,
+            'secure=secure; Secure',
+            'httponly=httponly; HttpOnly',
+            'path=path; Path=/cookie'
+        ]
     });
     var cookies = {};
     if(req.headers.cookie !== undefined){
