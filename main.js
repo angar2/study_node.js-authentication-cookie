@@ -5,6 +5,30 @@ var qs = require('querystring');
 var path = require('path');
 var sanitizeHTML = require('sanitize-html');
 var template = require('./lib/template.js');
+var cookie = require('cookie');
+
+function authIsOwner(request, response) {
+  var cookies = {};
+  var isOwner = false;
+  if(request.headers.cookie) {
+    cookies = cookie.parse(request.headers.cookie);
+  };
+  if(cookies.email === 'email@email.com') {
+    if(cookies.password === '1234') {
+      isOwner = true;
+    }
+  }
+  return isOwner;
+}
+
+function authStatus(request, response) {
+  var authStatus = '<p><a href="/login">Login</a></p>';
+  var isOwner = authIsOwner(request, response);
+  if(isOwner){
+    authStatus = '<p><a href="/logout_process">Logout</a></p>';
+  };
+  return authStatus;
+};
 
 var app = http.createServer(function(request,response){
     var _url = request.url;
@@ -16,7 +40,7 @@ var app = http.createServer(function(request,response){
           var title = 'Welcome';
           var desc = 'Hello Node';
           var list = template.list(filelist);
-          var HTML = template.HTML(title, list, `<h2>${title}</h2><p>${desc}</p>`, `<a href="/create">Create</a>`);
+          var HTML = template.HTML(title, list, `<h2>${title}</h2><p>${desc}</p>`, `<a href="/create">Create</a>`,authStatus(request, response));
           response.writeHead(200);
           response.end(HTML);
         });
@@ -35,7 +59,8 @@ var app = http.createServer(function(request,response){
                 <form action="delete_process" method="post">
                   <input type="hidden" name="id" value="${sanitizedTitle}" />
                   <input type="submit" value="Delete" />
-                </form>`
+                </form>`,
+                authStatus(request, response)
             );
             response.writeHead(200);
             response.end(HTML);
@@ -52,7 +77,8 @@ var app = http.createServer(function(request,response){
             <p><textarea type=text name="description" placeholder="description"></textarea></p>
             <p><input type="submit" /></p>
           </form>`,
-          `<h2>${title}</h2>`
+          `<h2>${title}</h2>`,
+          authStatus(request, response)
         );
         response.writeHead(200);
         response.end(HTML);
@@ -84,7 +110,8 @@ var app = http.createServer(function(request,response){
               <p><textarea type=text name="description" placeholder="description">${desc}</textarea></p>
               <p><input type="submit" /></p>
             </form>`, 
-            `<a href="/create">Create</a> <a href="/update?id=${title}">Update</a>`
+            `<a href="/create">Create</a> <a href="/update?id=${title}">Update</a>`,
+            authStatus(request, response)
           );
           response.writeHead(200);
           response.end(HTML);
