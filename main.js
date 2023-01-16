@@ -120,6 +120,45 @@ var app = http.createServer(function(request,response){
           response.end("Success");
         });
       });
+    } else if(pathname === '/login') {
+      fs.readdir(`./data`, function(err, filelist) {
+        var title = 'Login';
+        var list = template.list(filelist);
+        var HTML = template.HTML(title, list, 
+          `<h2>${title}</h2>
+          <form action="login_process" method="post">
+            <p><input type="text" name="email" placeholder="Email"></p>
+            <p><input type="password" name="password" placeholder="Password"></p>
+            <p><input type="submit" value="Login"></p>
+          </form>`, 
+          `<a href="/create">Create</a>`
+        );
+        response.writeHead(200);
+        response.end(HTML);
+      });
+    } else if(pathname === '/login_process') {
+      var body = '';
+      request.on('data', function(data) {
+        body = body + data;
+      });
+      request.on('end', function() {
+        var post = qs.parse(body);
+        var email = post.email;
+        var password = post.password;
+        if(email === 'email@email.com'){
+          if(password === '1234') {
+            response.writeHead(302, {
+              'Set-cookie': [
+                `email=${email}`, 
+                `password=${password}`
+              ], 
+              location: `/`
+            });
+            response.end("Success");
+          };
+        };
+        response.end("Who?");
+      });
     } else {
       response.writeHead(404);
       response.end('Not found');
