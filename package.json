@@ -21,6 +21,7 @@
   "homepage": "https://github.com/angar2/study_node.js#readme",
   "description": "",
   "dependencies": {
+    "cookie": "^0.5.0",
     "sanitize-html": "^2.7.3"
   }
 }
