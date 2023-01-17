@@ -30,6 +30,13 @@ function authStatus(request, response) {
   return authStatus;
 };
 
+function authentication(request, response) {
+  if(authIsOwner(request, response) === false) {
+    response.end('login required')
+    return false
+  }
+}
+
 var app = http.createServer(function(request,response){
     var _url = request.url;
     var queryData = url.parse(_url, true).query;
@@ -68,6 +75,7 @@ var app = http.createServer(function(request,response){
         });
       }
     } else if(pathname === '/create') {
+      authentication(request,response)
       fs.readdir(`./data`, function(err, filelist) {
         var title = 'Create';
         var list = template.list(filelist);
@@ -84,6 +92,7 @@ var app = http.createServer(function(request,response){
         response.end(HTML);
       });
     } else if(pathname === '/create_process') {
+      authentication(request,response)
       var body = '';
       request.on('data', function(data) {
         body = body + data;
@@ -98,6 +107,7 @@ var app = http.createServer(function(request,response){
         });
       });
     } else if(pathname === '/update') {
+      authentication(request,response)
       fs.readdir(`./data`, function(err, filelist) {
         var filteredId = path.parse(queryData.id).base;
         fs.readFile(`data/${filteredId}`, 'utf8', function(err, desc){
@@ -118,6 +128,7 @@ var app = http.createServer(function(request,response){
         })
       });
     } else if(pathname === '/update_process') {
+      authentication(request,response)
       var body = '';
       request.on('data', function(data) {
         body = body + data;
@@ -135,6 +146,7 @@ var app = http.createServer(function(request,response){
         });
       });
     } else if(pathname === '/delete_process') {
+      authentication(request,response)
       var body = '';
       request.on('data', function(data) {
         body = body + data;
